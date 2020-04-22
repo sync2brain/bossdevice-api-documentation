@@ -7,10 +7,10 @@
 	>
 <channel>
 	<title>
-	Comments for bossdevice API Documentation	</title>
+	Comments for bossdevice	</title>
 	<atom:link href="https://sync2brain.github.io/bossdevice-api-documentation/comments/feed/" rel="self" type="application/rss+xml" />
 	<link>https://sync2brain.github.io/bossdevice-api-documentation</link>
-	<description>Just another WordPress site</description>
+	<description>API Documentation</description>
 	<lastBuildDate>Wed, 22 Apr 2020 15:18:10 +0000</lastBuildDate>
 	<sy:updatePeriod>
 	hourly	</sy:updatePeriod>
