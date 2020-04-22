@@ -111,7 +111,52 @@ img.emoji {
 
 
 
-<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">sendPulse</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important"></div></div>
+<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">sendPulse</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important">
+<p class="has-small-font-size">Description: sendPulse method of the bossdevice class allows you to generate 1 pulse at a specified Output port (out of 4) of the bossdevice.</p>
+
+
+
+<p class="has-small-font-size">Syntax:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.sendPulse([bossdevice_port_number]) % [bossdevice_port_number] is non-zero positive integer less than or equal to 4
+</pre>
+
+
+
+<p class="has-small-font-size">Examples:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">bd.sendPulse(1) % delivers a single pulse at the Output port 1  
+bd.sendPulse(3) % delivers a single pulse at the Output port 3
+</pre>
+</div></div>
+
+
+
+<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">manualTrigger</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important">
+<p class="has-small-font-size">Description: manualTrigger method of bossdevice allows you to deliver a pre-built sequence of up to 1500 triggers where each trigger is timed relative to the onset of manualTrigger command, delivers on a specified Output port and also delivers an 8-bit marker assigned to each trigger as well. <br>The pre-built sequence is generated using another command (see below: configure_time_port_marker) however the bossdevice starts delivering the pulses configured before when manualTrigger method is executed.</p>
+
+
+
+<p class="has-small-font-size">Syntax:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.manualTrigger % start the previously configured trigger sequences in [time port marker] style.
+</pre>
+
+
+
+<p class="has-small-font-size">Examples:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">bd.manualTrigger
+</pre>
+</div></div>
 </div>
 
 
