@@ -157,6 +157,107 @@ bd.sendPulse(3) % delivers a single pulse at the Output port 3
 <pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">bd.manualTrigger
 </pre>
 </div></div>
+
+
+
+<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">configure_time_port_marker</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important">
+<p class="has-small-font-size">Description: configure_time_port_marker method of bossdevice allows you to prepare a sequence of triggers in [time port marker] vector style. Maximum of 1500 triggers can be loaded onto this configuration method. In order to prepare a single trigger in [time port marker] style, just give input argument as [0 1 1] vector.<br>Each trigger in this vector has three elements , first index being time, second index being the port number of bossdevice to deliver the output pulse and the last index being the 8-bit event marker to be generated and written to the Biosignal processor for respective trigger.<br></p>
+
+
+
+<p class="has-small-font-size">Syntax:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.configure_time_port_marker([trigger_sequence_vector]
+% [trigger_sequence vector] is an Nx3 vector , whereas N is number of triggers and the three elements being the time onset, port number and event marker
+</pre>
+
+
+
+<p class="has-small-font-size">Examples:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">bd.configure_time_port_marker([2 3 144]) %configures a trigger sequence in which the pulse will be delivered 2 seconds after the manualTrigger command execution, on the 3rd port and event writes 144 marker on the Biosignal processor
+bd.configure_time_port_marker([3 3 144;4 2 128])  %configures 2 trigger sequence in which the first pulse will be delivered 3 seconds after the manualTrigger command execution, on the 3rd port and will writes 144 marker on the Biosignal processor, and then the second pulse will be delivered 4 seconds after the manualTrigger command execution, on the 2nd port and writes 128 event marker on the Biosignal processor,
+</pre>
+</div></div>
+
+
+
+<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">stop</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important">
+<p class="has-small-font-size">Description: Quite often stopping of the trigger sequence is required before the sequence ends. the stop method allows you to stop further generation and delivery of any sequence loaded onto the trigger generator of the bossdevice.<br>The last configured sequence can again be started by using &#8220;manualTrigger&#8221; method after the stop command.</p>
+
+
+
+<p class="has-small-font-size">Syntax:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.stop % stops the generation of output triggers from bossdevice however the class object remain intact.
+</pre>
+
+
+
+<p class="has-small-font-size">Examples:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">bd.stop
+</pre>
+</div></div>
+
+
+
+<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">eeg_channels</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important">
+<p class="has-small-font-size">Description: bossdevice can work on maximum of 128 EEG channels, however the minimum number of channels required to work with EEG associated features of bossdevice have been kept flexible and can be defined as in number of EEG cannnels being streamed from your Biosignal Processor.</p>
+
+
+
+<p class="has-small-font-size">Syntax:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.eeg_channels=[number_of_streaming_eeg_channels] % [number_of_streaming_eeg_channels] is an integer from 1 up till 128.
+</pre>
+
+
+
+<p class="has-small-font-size">Examples:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">bd.eeg_channels=32; % informing bossbox that 32 EEG channels are being streamed frm your Biosignal Processor
+bd.eeg_channels=64; % informing bossbox that 64 EEG channels are being streamed frm your Biosignal Processor
+bd.eeg_channels=128; % informing bossbox that 128 EEG channels are being streamed frm your Biosignal Processor
+bd.eeg_channels=5; % informing bossbox that 5 EEG channels are being streamed frm your Biosignal Processor
+</pre>
+</div></div>
+
+
+
+<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">aux_channels</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important">
+<p class="has-small-font-size">Description: bossdevice can work on maximum of 8 Auxiliary/Biopolar/EMG channels, however the minimum number of channels required to work with Auxiliary Channels associated features of bossdevice have been kept flexible and can be defined as in number of Aux cannnels being streamed from your Biosignal Processor.<br><br><strong>Caution: Auxiliary channels should always be the<em> last</em> 8 or N channels in your Protocol of Biosignal Processor otherwise bossdevice will assume them to be EEG channels</strong></p>
+
+
+
+<p class="has-small-font-size">Syntax:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.aux_channels=[number_of_streaming_aux_channels] % [number_of_streaming_eeg_channels] is an integer from 1 up till 8.
+</pre>
+
+
+
+<p class="has-small-font-size">Examples:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">bd.eeg_channels=8; % informing bossbox that 8 aux/Emg/Bipolar channels are being streamed frm your Biosignal Processor
+bd.eeg_channels=2; % informing bossbox that 2 aux/EMG/Bipolar channels are being</pre>
+</div></div>
 </div>
 
 
