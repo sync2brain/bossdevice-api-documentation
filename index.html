@@ -88,7 +88,7 @@ img.emoji {
 
 	<div class="entry-content">
 		
-<p class="has-small-font-size">The BOSS Device Application is a set of low-level functions that allows user to control the BOSS device in a user-friendly programmable manner. The combined execution of low level functions allows the BOSS Box to perform certain high level tasks that could be amongst but not limited to generating various number of trigger outputs, timed in a certain fashion, triggered at a certain Phase of an ongoing EEG Oscillation and guided by the Oscillation Amplitude Thresholds.</p>
+<p class="has-small-font-size">The bossdevice API is a set of low-level functions that allows user to control the BOSS device in a user-friendly programmable manner. The combined execution of such low level functions allows the bossdevice to perform certain high level tasks that could be amongst but not limited to generating various number of trigger outputs, timed in a certain fashion, triggering at a certain Phase of an ongoing EEG Oscillation and guided by the Oscillation Amplitude Thresholds.</p>
 
 
 
@@ -261,12 +261,16 @@ bd.eeg_channels=5; % informing bossbox that 5 EEG channels are being streamed fr
 
 <pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">bd.eeg_channels=8; % informing bossbox that 8 aux/Emg/Bipolar channels are being streamed frm your Biosignal Processor
 bd.eeg_channels=2; % informing bossbox that 2 aux/EMG/Bipolar channels are being</pre>
+
+
+
+<p></p>
 </div></div>
 
 
 
 <div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">spatial_filter_weights</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important">
-<p class="has-small-font-size">Description: bossdevice contains 3 built in Oscillatory phase prediction models each for Theta (4-8 Hz), Alpha (8-14Hz) and Beta (14-30Hz) frequency bands. Real-time phase detection can be performed for maximum of 2 different, pre-specified spatially filtered channels in parallel. </p>
+<p class="has-small-font-size">Description: Spatial filtering of the signals is an important step before commencing real-time brain states detection. The bossdevice allows to specify two different spatially filtered channels and can detect brain states (based on the target phase &amp; amplitude) for both of these spatial filtered channels in parallel. If any one of them is specified then the other one is ignored and assigned 0 weights. The index of eeg_channels being streamed from the Biosignal processor e.g. ActiCHamp or NeurOne corrosponds to the index of the weights matrix explained below. </p>
 
 
 
@@ -274,12 +278,8 @@ bd.eeg_channels=2; % informing bossbox that 2 aux/EMG/Bipolar channels are being
 
 
 
-<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.alpha.phase_target([spatial_filter_channel_number])=phase_angle_in_radians % sets target phase of Alpha Oscillation
-obj.theta.phase_target([spatial_filter_channel_number])=phase_angle_in_radians % sets target phase of Alpha Oscillation
-obj.beta.phase_target([spatial_filter_channel_number])=phase_angle_in_radians % sets target phase of Alpha Oscillation
-% [spatial_filter_channel_number] is an integer having value 1 or 2.
-% [phase_angle_in_radians] is 0 for Peak, pi for Trough, -pi/2 for Rising Flank &amp; +pi/2 for Falling Flank
-</pre>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.spatial_filter_weights=[weights_for_both_channels]
+%[weights_for_both_channels] is a Nx2 matrix where N is Number of EEG channels specified before (see eeg_channels) and the first column is first spatially filtered channel, similarly the second column is the second channel. Each element of the column vector is a "normalized weight" w.r.t. particular column such that the sum of all weights of a particular channel is zero.</pre>
 
 
 
@@ -287,8 +287,11 @@ obj.beta.phase_target([spatial_filter_channel_number])=phase_angle_in_radians % 
 
 
 
-<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.alpha.phase_target(1)=0; % bossdevice is loaded to detect peak (0 radians) from the spatial filter weights of first channel with the assumption that the Oscillation is in Alpha frequency band
-obj.beta.phase_target(2)=pi; % bossdevice is loaded to detect trough(pi radians) from the spatial filter weights of second channel with the assumption that the Oscillation is in Beta frequency band</pre>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">% assume that there are 5 EEG channels 
+bd.spatial_filter_weights=[0; -0.5; 1; -0.5; 0]; % the channel 1 will be assigned the given weights and all the eeg_channels for 2nd spatially filtered channel would have 0 weights. 
+
+% assume that there are 3 EEG channels 
+bd.spatial_filter_weights=[0 -0.5; 1 1; 0 -0.5]; % the channel 1 will be assigned the weights given on first column and channel 2 will be assigned the weights given on 2nd column.  </pre>
 
 
 
@@ -298,7 +301,7 @@ obj.beta.phase_target(2)=pi; % bossdevice is loaded to detect trough(pi radians)
 
 
 <div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">phase_target</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important">
-<p class="has-small-font-size">Description: bossdevice contains 3 built in Oscillatory phase prediction models each for Theta (4-8 Hz), Alpha (8-14Hz) and Beta (14-30Hz) frequency bands. Real-time phase detection can be performed for maximum of 2 different, pre-specified spatially filtered channels in parallel. </p>
+<p class="has-small-font-size">Description: bossdevice contains 3 built in Oscillatory phase prediction models each for Theta (4-8 Hz), Alpha (8-14Hz) and Beta (14-30Hz) frequency bands. Real-time phase detection can be performed for maximum of 2 different, pre-specified spatially filtered channels in parallel.  This method allows to define a target phase in radians for a particular frequency band.</p>
 
 
 
@@ -307,11 +310,18 @@ obj.beta.phase_target(2)=pi; % bossdevice is loaded to detect trough(pi radians)
 
 
 <pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.alpha.phase_target([spatial_filter_channel_number])=phase_angle_in_radians % sets target phase of Alpha Oscillation
-obj.theta.phase_target([spatial_filter_channel_number])=phase_angle_in_radians % sets target phase of Alpha Oscillation
-obj.beta.phase_target([spatial_filter_channel_number])=phase_angle_in_radians % sets target phase of Alpha Oscillation
+obj.theta.phase_target([spatial_filter_channel_number])=phase_angle_in_radians % sets target phase of Theta Oscillation
+obj.beta.phase_target([spatial_filter_channel_number])=phase_angle_in_radians % sets target phase of Beta Oscillation
 % [spatial_filter_channel_number] is an integer having value 1 or 2.
-% [phase_angle_in_radians] is 0 for Peak, pi for Trough, -pi/2 for Rising Flank &amp; +pi/2 for Falling Flank
-</pre>
+% [phase_angle_in_radians] is 0 for Peak, pi for Trough, -pi/2 for Rising Flank &amp; +pi/2 for Falling Flank</pre>
+
+
+
+<p class="has-small-font-size">Input Arguments:<br></p>
+
+
+
+<figure class="wp-block-table is-style-stripes"><table><thead><tr><th>Description</th><th>Value</th></tr></thead><tbody><tr><td>[spatial_filter_channel_number]</td><td>integer having value 1 or 2</td></tr><tr><td>Phase angle for Peak</td><td>0</td></tr><tr><td>Phase angle for Trough</td><td>pi</td></tr><tr><td>Phase angle for Rising Flank</td><td>-pi/2</td></tr><tr><td>Phase angle for Falling Flank</td><td>+pi/2</td></tr><tr><td>Phase angle for Random Phase</td><td>0 (Note: specify phase_plusminus as pi) in this particular case</td></tr></tbody></table></figure>
 
 
 
@@ -319,50 +329,251 @@ obj.beta.phase_target([spatial_filter_channel_number])=phase_angle_in_radians % 
 
 
 
-<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.alpha.phase_target(1)=0; % bossdevice is loaded to detect peak (0 radians) from the spatial filter weights of first channel with the assumption that the Oscillation is in Alpha frequency band
-obj.beta.phase_target(2)=pi; % bossdevice is loaded to detect trough(pi radians) from the spatial filter weights of second channel with the assumption that the Oscillation is in Beta frequency band</pre>
-
-
-
-<p></p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">bd.alpha.phase_target(1)=0; % bossdevice is loaded to detect peak (0 radians) from first spatially filtered channel  with the assumption that the Oscillation is in Alpha frequency band
+bd.beta.phase_target(2)=pi; % bossdevice is loaded to detect trough(pi radians) from second spatially filtered channel with the assumption that the Oscillation is in Beta frequency band</pre>
 </div></div>
 
 
 
-<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">phase_plusminus</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important"></div></div>
+<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">phase_plusminus</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important">
+<p class="has-small-font-size">Description: Defining absolute target phase angles in order to detect a brain state is often prone to error mainly due to the resolution of data obtained after sampling rate transition. In order to overcome this digitization resolution error another parameter has to be defined such that the vicinities of the target phase shall be made clear to the detection algorithm.  For an instance, while detecting a 0 radians phase, the phase vector would probably look like this [-0.001324 -0.00234 0.00243 0.004324], and since none of them are mathematically equivalent to zero therefore in order to not allow to skip such Oscillatory Peak events and to increase the accuracy of the phase detection, a tolerance value is to be provided.</p>
 
 
 
-<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">amplitude_min</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important"></div></div>
+<p class="has-small-font-size">Syntax:</p>
 
 
 
-<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">amplitude_max</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important"></div></div>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.alpha.phase_plusminus([spatial_filter_channel_number])=phase_tolerance_in_radians % sets target phase tolerance of Alpha Oscillation
+obj.theta.phase_plusminus([spatial_filter_channel_number])=phase_tolerance_in_radians % sets target phase tolerance of Theta Oscillation
+obj.beta.phase_plusminus([spatial_filter_channel_number])=phase_tolerance_in_radians % sets target phase of Beta Oscillation
+% [spatial_filter_channel_number] is an integer having value 1 or 2.
+%Note: While targeting a random phase, the tolerance could go as high as possible i.e. pi radians or Nxpi radians e.g. 2pi etc</pre>
 
 
 
-<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">lpf_fir_coeffs</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important"></div></div>
+<p class="has-small-font-size">Examples:</p>
 
 
 
-<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">bpf_fir_coeffs</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important"></div></div>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">bd.alpha.phase_plusminus(1)=pi/40; % bossdevice is loaded to detect the setted target phase with a tolerance of pi/40 radians from first spatially filtered channel with the assumption that the Oscillation is in Alpha frequency band
+bd.beta.phase_plusminus(2)=pi/70; % ossdevice is loaded to detect the setted target phase with a tolerance of pi/70 radians from second spatially filtered channel with the assumption that the Oscillation is in Beta frequency band</pre>
+</div></div>
 
 
 
-<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">arm</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important"></div></div>
+<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">amplitude_min</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important">
+<p class="has-small-font-size">Description: Defining minimum amplitude threshold in order to match a specific brain state is important. The bossdevice allows to define minimum amplitude threshold in micro volts that must be reached along with other brain state associated conditions such as maximum amplitude, phase target, and phase tolerance in order to be able to declare the brain state as detected and trigger further sequence of events. bossdevice contains 3 built in Oscillatory minimum amplitude estimation models each for Theta (4-8 Hz), Alpha (8-14Hz) and Beta (14-30Hz) frequency bands. Real-time minimum amplitude detection can be performed for maximum of 2 different, pre-specified spatially filtered channels in parallel. </p>
 
 
 
-<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">disarm</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important"></div></div>
+<p class="has-small-font-size">Syntax:</p>
 
 
 
-<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">sample_and_hold_period</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important"></div></div>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.alpha.amplitude_min([spatial_filter_channel_number])=min_amplitude_microV % sets minimum amplitude threshold of Alpha Oscillation
+obj.theta.amplitude_min([spatial_filter_channel_number])=min_amplitude_microV % sets minimum amplitude threshold of Theta Oscillation
+obj.beta.amplitude_min([spatial_filter_channel_number])=min_amplitude_microV % sets minimum amplitude threshold of Beta Oscillation
+% [spatial_filter_channel_number] is an integer having value 1 or 2.</pre>
 
 
 
-<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">mep</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important"></div></div>
+<p class="has-small-font-size">Examples:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">bd.alpha.amplitude_min(1)=1000; % bossdevice is loaded to monitor the specified minimum amplitude threshold from first spatially filtered channel with the assumption that the Oscillation is in Alpha frequency band
+bd.beta.amplitude_min(2)=1e5; % bossdevice is loaded to monitor the specified minimum amplitude threshold from second spatially filtered channel with the assumption that the Oscillation is in Beta frequency band</pre>
+</div></div>
+
+
+
+<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">amplitude_max</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important">
+<p class="has-small-font-size">Description: Defining maximum amplitude threshold in order to match a specific brain state is important. The bossdevice allows to define maximum amplitude threshold in micro volts that must be not be reached in order to be able to declare the brain state as detected and trigger further sequence of events. The bossdevice contains 3 built in Oscillatory maximum amplitude estimation models each for Theta (4-8 Hz), Alpha (8-14Hz) and Beta (14-30Hz) frequency bands. Real-time maximum amplitude detection can be performed for maximum of 2 different, pre-specified spatially filtered channels in parallel. </p>
+
+
+
+<p class="has-small-font-size">Syntax:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.alpha.amplitude_max([spatial_filter_channel_number])=max_amplitude_microV % sets maximum amplitude threshold of Alpha Oscillation
+obj.theta.amplitude_max([spatial_filter_channel_number])=max_amplitude_microV % sets maximum amplitude threshold of Theta Oscillation
+obj.beta.amplitude_max([spatial_filter_channel_number])=max_amplitude_microV % sets maximum amplitude threshold of Beta Oscillation
+% [spatial_filter_channel_number] is an integer having value 1 or 2.</pre>
+
+
+
+<p class="has-small-font-size">Examples:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">bd.alpha.amplitude_max(1)=1000; % bossdevice is loaded to monitor the specified maximum amplitude threshold from first spatially filtered channel with the assumption that the Oscillation is in Alpha frequency band
+bd.beta.amplitude_max(2)=1e5; % bossdevice is loaded to monitor the specified maximum amplitude threshold from second spatially filtered channel with the assumption that the Oscillation is in Beta frequency band</pre>
+</div></div>
+
+
+
+<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">lpf_fir_coeffs</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important">
+<p class="has-small-font-size">Description: Spatially filtered channel&#8217;s signals described in the &#8220;spatial_filter_weights&#8221; function are passed through a low pass FIR filter for anti-aliasing. The coefficients of this filter can be specified using this function provided that the filter has an order of 100 at maximum. </p>
+
+
+
+<p class="has-small-font-size">Syntax:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.alpha.lpf_fir_coeffs = [filter_coefficients]; %for Alpha
+obj.theta.lpf_fir_coeffs = [filter_coefficients]; %for Theta
+obj.beta.lpf_fir_coeffs = [filter_coefficients]; %for Beta</pre>
+
+
+
+<p class="has-small-font-size">Sampling Rates:</p>
+
+
+
+<figure class="wp-block-table"><table><thead><tr><th>Oscillation</th><th>Sampling Rate</th></tr></thead><tbody><tr><td>Alpha (8-14 Hz)</td><td>500 Hz </td></tr><tr><td>Theta (4-8 Hz)</td><td>250 Hz</td></tr><tr><td>Beta(14-30 Hz)</td><td>1000 Hz</td></tr></tbody></table></figure>
+
+
+
+<p class="has-small-font-size">Examples:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">bd.alpha.lpf_fir_coeffs =  [filter_coefficients];
+
+bd.beta.lpf_fir_coeffs =  [filter_coefficients];
+</pre>
+</div></div>
+
+
+
+<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">bpf_fir_coeffs</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important">
+<p class="has-small-font-size">Description: Low pass filtered channel&#8217;s signal described in the &#8220;lpf_fir_coeffs&#8221; function is then pass through an FIR Band Pass filter. The coefficients of this filter can be specified using this function provided that the filter has an order of 100 at maximum. </p>
+
+
+
+<p class="has-small-font-size">Syntax:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.alpha.bpf_fir_coeffs = [filter_coefficients]; %for Alpha
+obj.theta.bpf_fir_coeffs = [filter_coefficients]; %for Theta
+obj.beta.bpf_fir_coeffs = [filter_coefficients]; %for Beta</pre>
+
+
+
+<p class="has-small-font-size">Sampling Rates:</p>
+
+
+
+<figure class="wp-block-table"><table><thead><tr><th>Oscillation</th><th>Sampling Rate</th></tr></thead><tbody><tr><td>Alpha (8-14 Hz)</td><td>500 Hz </td></tr><tr><td>Theta (4-8 Hz)</td><td>250 Hz</td></tr><tr><td>Beta(14-30 Hz)</td><td>1000 Hz</td></tr></tbody></table></figure>
+
+
+
+<p class="has-small-font-size">Examples:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">bd.alpha.bpf_fir_coeffs = firls(80, [0 (11 + [-5 -2 +2 +5]) (500/2)]/(500/2), [0 0 1 1 0 0], [1 1 1] ); %creates FIR Band Pass filter of order "80" , around peak frequency of 11 Hz and assigned it to Alpha model of bossdevice
+
+bd.beta.bpf_fir_coeffs = firls(100, [0 (19 + [-5 -2 +2 +5]) (1000/2)]/(1000/2), [0 0 1 1 0 0], [1 1 1] ); %creates FIR Band Pass filter of order "100" , around peak frequency of 19 Hz and assigned it to Beta model of bossdevice
+</pre>
+</div></div>
+
+
+
+<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">arm</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important">
+<p class="has-small-font-size">Description: Arming bossdevice would allow bossdevice to actively search for the Brain states already set into it and generate the trigger sequence configured using &#8220;configure_time_port_marker&#8221; upon every instance of detection.</p>
+
+
+
+<p class="has-small-font-size">Syntax:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.armed;</pre>
+
+
+
+<p class="has-small-font-size">Examples:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">bd.armed; % will set bossdevice to detect the specified brain states and trigger sequence </pre>
+</div></div>
+
+
+
+<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">disarm</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important">
+<p class="has-small-font-size">Description: Disarming bossdevice would allow bossdevice to stop search for the Brain states already by now &#8220;Armed&#8217; into it and immediately stops the generation of the trigger sequence configured using &#8220;configure_time_port_marker&#8221; .</p>
+
+
+
+<p class="has-small-font-size">Syntax:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.disarm;</pre>
+
+
+
+<p class="has-small-font-size">Examples:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">bd.disarm; % will stop bossdevice to detect the specified brain states and stop ongoing trigger sequence </pre>
+</div></div>
+
+
+
+<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">sample_and_hold_period</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important">
+<p class="has-small-font-size">Description: Upon an artifactual trigger event such as Trans-cranial Magnetic Stimulation (TMS) pulse artifact etc., the data gets distorted and is accumulated with a lot of noise, in order to hold the samples for a specified period of time, sample and hold period method can be helpful. This is also helpful to keep the visual output of the bossdevice clean and tidy.</p>
+
+
+
+<p class="has-small-font-size">Syntax:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">obj.sample_and_hold_period = [no_of_sample_to_hold]; % no_of_sample_to_hold are calculated at the rate of 5KHz </pre>
+
+
+
+<p class="has-small-font-size">Examples:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">bd.sample_and_hold_period = 500; % hold the samples for 100 ms 
+</pre>
+</div></div>
+
+
+
+<div class="wp-block-advgb-accordion-item advgb-accordion-item" style="margin-bottom:15px"><div class="advgb-accordion-header" style="background-color:#f0f0f0;color:#404040;border-style:solid;border-color:#f0f0f0;border-radius:2px"><span class="advgb-accordion-header-icon"><svg fill="#404040" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="none" d="M0,0h24v24H0V0z"></path><path d="M12,5.83L15.17,9l1.41-1.41L12,3L7.41,7.59L8.83,9L12,5.83z M12,18.17L8.83,15l-1.41,1.41L12,21l4.59-4.59L15.17,15 L12,18.17z"></path></svg></span><h4 class="advgb-accordion-header-title" style="color:inherit">mep</h4></div><div class="advgb-accordion-body" style="border-style:solid !important;border-color:#f0f0f0 !important;border-top:none !important;border-radius:2px !important">
+<p class="has-small-font-size">Description: Trans-cranial Magnetic Stimulation (TMS) at the motor cortex generates Motor Evoked Potentials (MEPs) at the contra-lateral hand muscle. The mep method allows to observe the MEP&#8217;s EMG potential sampled at 5KHz from the auxiliary channel of the streaming bio-signal processor upon every trigger event. In similar principle, all the EEG and other AUX channels being streamed from the Biosignal Processor can be observed by setting the real time host scopes (see Demo Scripts for more details).</p>
+
+
+
+<p class="has-small-font-size">Syntax:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">MEPData=obj.mep;</pre>
+
+
+
+<p class="has-small-font-size">Examples:</p>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">MEPData=bd.mep; %MEPData would give the 5000x1 dimensional data in MATLAB workspace and contains the latest MEP's EMG data.
+</pre>
+</div></div>
 </div>
+
+
 
 
 
