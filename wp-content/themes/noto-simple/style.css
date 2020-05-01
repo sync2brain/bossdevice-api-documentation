@@ -414,7 +414,7 @@ hr {
   background-color: #ccc;
   border: 0;
   height: 1px;
-  margin-bottom: 1.5em;
+  margin-bottom: 1em; 
 }
 
 ul,
@@ -1118,7 +1118,7 @@ h1.entry-title {
 h2.entry-title {
   margin-top: 0;
   padding: 0.5em 0 1.5em 0;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 0px solid #ccc;
 }
 
 .entry-title a {
